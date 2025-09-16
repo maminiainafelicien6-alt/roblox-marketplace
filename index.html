@@ -3,197 +3,180 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Roblox Marketplace</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<title>Marketplace Steal a Brainrot</title>
 <style>
-    body {
-        font-family: 'Roboto', sans-serif;
-        background: linear-gradient(135deg, #1e3c72, #2a5298);
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: #fff;
-        min-height: 100vh;
-    }
-    h1 {
-        margin-top: 20px;
-        font-size: 2em;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    .buttons {
-        margin: 20px 0;
-        display: flex;
-        gap: 20px;
-    }
-    button {
-        padding: 15px 30px;
-        font-size: 16px;
-        border: none;
-        border-radius: 20px;
-        cursor: pointer;
-        background: #00d4ff;
-        color: #000;
-        font-weight: bold;
-        transition: transform 0.2s, background 0.3s;
-    }
-    button:hover {
-        transform: scale(1.05);
-        background: #00f0ff;
-    }
-    .container {
-        background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(10px);
-        padding: 25px;
-        border-radius: 25px;
-        max-width: 400px;
-        width: 90%;
-        text-align: center;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        margin-bottom: 20px;
-    }
-    input {
-        padding: 12px;
-        margin: 10px 0;
-        width: 80%;
-        border-radius: 12px;
-        border: none;
-        font-size: 16px;
-    }
-    img {
-        border-radius: 50%;
-        margin-top: 10px;
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        border: 3px solid #fff;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-    .marketplace {
-        margin-top: 30px;
-        width: 90%;
-        max-width: 600px;
-    }
-    .market-item {
-        background: rgba(255,255,255,0.2);
-        padding: 15px;
-        margin: 10px 0;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-    .market-item img {
-        width: 60px;
-        height: 60px;
-        margin-right: 15px;
-    }
-    .market-item p {
-        margin: 0;
-        font-weight: bold;
-    }
+body { font-family: Arial, sans-serif; background:#0f0f1d; color:#fff; margin:0; padding:0; }
+header { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; background:#1f4068; box-shadow:0 2px 5px rgba(0,0,0,0.5); }
+header h1 { margin:0; font-size:22px; color:#f5f5f5; }
+#vendeButton { padding:10px 20px; border:none; border-radius:12px; background:linear-gradient(90deg,#6a2c70,#b83b5e); color:white; font-weight:bold; cursor:pointer; font-size:16px; }
+#popupNotification { display:flex; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); align-items:center; justify-content:center; z-index:100; }
+#popupNotification div { background:#162447; padding:30px; border-radius:15px; text-align:center; max-width:320px; width:90%; }
+#popupNotification button { padding:12px 25px; margin:10px; border:none; border-radius:12px; background:#e43f5a; color:white; font-weight:bold; cursor:pointer; font-size:16px; }
+#popupForm { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#162447; padding:25px; border-radius:15px; box-shadow:0 0 15px rgba(0,0,0,0.7); z-index:101; width:90%; max-width:400px; }
+#popupForm input, #popupForm select { width:100%; margin:8px 0; padding:10px; border-radius:8px; border:none; font-size:16px; }
+#popupForm button { padding:12px; width:100%; border:none; border-radius:12px; background:#e43f5a; color:white; font-weight:bold; cursor:pointer; margin-top:10px; font-size:16px; }
+#marketplace { display:flex; flex-wrap:wrap; padding:20px; gap:15px; justify-content:center; }
+.itemCard { background:#1f4068; border-radius:12px; padding:15px; width:180px; text-align:center; box-shadow:0 0 10px rgba(0,0,0,0.5); position:relative; }
+.itemCard img { width:100%; height:140px; object-fit:cover; border-radius:8px; }
+.itemCard button { margin-top:10px; padding:8px 10px; border:none; border-radius:8px; background:#6a2c70; color:white; cursor:pointer; font-size:14px; }
+.itemCard .supprimerBtn { background:#e43f5a; position:absolute; top:5px; right:5px; padding:4px 8px; font-size:12px; }
+.channelHeader { display:flex; justify-content:center; align-items:center; background:#162447; padding:15px; border-radius:15px; box-shadow:0 0 10px rgba(0,0,0,0.5); max-width:600px; margin:15px auto; font-size:22px; font-weight:bold; color:#f5f5f5; }
 </style>
 </head>
 <body>
 
-<h1>Roblox Marketplace</h1>
+<div class="channelHeader">LaTeamBlox</div>
 
-<div class="buttons">
-    <button onclick="showSell()">Vendre</button>
-    <button onclick="showDonate()">Donner</button>
+<div id="popupNotification">
+  <div>
+    <h2>Autoriser les notifications ?</h2>
+    <button id="notifOui">Oui</button>
+    <button id="notifNon">Non</button>
+  </div>
 </div>
 
-<div class="container" id="sellContainer" style="display:none;">
-    <h2>Vendre ton Game Pass</h2>
-    <input type="text" id="username" placeholder="Nom d'utilisateur Roblox">
-    <button onclick="fetchProfile()">Suivant</button>
-    <div id="profile" style="display:none;">
-        <p id="displayName"></p>
-        <img id="avatar" src="" alt="Avatar Roblox">
-        <div style="margin-top:10px;">
-            <button onclick="confirmUser(true)">C'est moi ✅</button>
-            <button onclick="confirmUser(false)">Ce n'est pas moi ❌</button>
-        </div>
-    </div>
-    <div id="passInput" style="display:none;">
-        <input type="text" id="gamepass" placeholder="ID de ton Game Pass">
-        <button onclick="addToMarketplace()">Ajouter au Marketplace</button>
-    </div>
+<header>
+  <h1>Marketplace Brainrot</h1>
+  <button id="vendeButton">VENDRE</button>
+</header>
+
+<div id="popupForm">
+  <h2>Ajouter votre bête</h2>
+  <input type="text" id="nomBete" placeholder="Nom de la bête" required>
+  <input type="text" id="descriptionBete" placeholder="Description" required>
+  <select id="mutationBete">
+    <option value="Normal">Normal</option>
+    <option value="Gold">Gold</option>
+    <option value="Diamant">Diamant</option>
+    <option value="Rainbow">Rainbow</option>
+    <option value="Candy">Candy</option>
+    <option value="Bloodroot">Bloodroot</option>
+  </select>
+  <input type="file" id="imageBete" accept="image/*" required>
+  <input type="text" id="utilisateurRoblox" placeholder="Nom utilisateur Roblox" required>
+  <input type="number" id="prixRobux" placeholder="Prix en Robux" required>
+  <button id="enregistrerBete">Enregistrer</button>
 </div>
 
-<div class="container" id="donateContainer" style="display:none;">
-    <h2>Marketplace</h2>
-    <div class="marketplace" id="marketplace"></div>
-</div>
+<div id="marketplace"></div>
 
 <script>
-let currentUser = {};
+document.addEventListener('DOMContentLoaded', () => {
 
-function showSell() {
-    document.getElementById('sellContainer').style.display = 'block';
-    document.getElementById('donateContainer').style.display = 'none';
-}
+    // 🔹 Supprimer tout ce qui avait été sauvegardé avant
+    localStorage.removeItem('itemsSauvegardes');
 
-function showDonate() {
-    document.getElementById('sellContainer').style.display = 'none';
-    document.getElementById('donateContainer').style.display = 'block';
-}
+    let notificationsAutorisees = false;
+    const popupNotification = document.getElementById('popupNotification');
+    const notifOui = document.getElementById('notifOui');
+    const notifNon = document.getElementById('notifNon');
 
-async function fetchProfile() {
-    const username = document.getElementById('username').value.trim();
-    if (!username) return alert("Entre un nom d'utilisateur Roblox!");
+    popupNotification.style.display = 'flex';
 
-    try {
-        const res = await fetch(`https://users.roblox.com/v1/users/by-username?username=${encodeURIComponent(username)}`);
-        const data = await res.json();
-        if(data.id) {
-            currentUser.id = data.id;
-            currentUser.name = data.name;
-            document.getElementById('displayName').innerText = `${data.name} (ID: ${data.id})`;
-            document.getElementById('avatar').src = `https://www.roblox.com/headshot-thumbnail/image?userId=${data.id}&width=420&height=420&format=png`;
-            document.getElementById('profile').style.display = 'block';
-        } else {
-            alert("Utilisateur introuvable!");
+    notifOui.addEventListener('click', () => {
+        notificationsAutorisees = true;
+        window.notificationsAutorisees = true;
+        popupNotification.style.display='none';
+        alert('Notifications activées !');
+    });
+
+    notifNon.addEventListener('click', () => {
+        notificationsAutorisees = false;
+        window.notificationsAutorisees = false;
+        popupNotification.style.display='none';
+        alert('Vous devez activer les notifications pour utiliser la marketplace.');
+    });
+
+    // 🔹 Initialisation marketplace
+    let itemsSauvegardes = JSON.parse(localStorage.getItem('itemsSauvegardes') || '[]');
+
+    function afficherItem(item){
+        const card = document.createElement('div');
+        card.className = 'itemCard';
+        card.innerHTML = `
+            <img src="${item.imageURL}" alt="Bête">
+            <h3>${item.nom}</h3>
+            <p>${item.description}</p>
+            <p>Mutation: ${item.mutation}</p>
+            <p>Utilisateur: ${item.utilisateur}</p>
+            <p>Prix: ${item.prix} Robux</p>
+            <button onclick="acheterBete('${item.nom}','${item.utilisateur}',${item.prix})">Acheter</button>
+        `;
+
+        // Ajouter le bouton supprimer uniquement pour le créateur actuel
+        if(item.utilisateur === document.getElementById('utilisateurRoblox').value.trim() || item.utilisateur === ""){
+            const btnSupprimer = document.createElement('button');
+            btnSupprimer.textContent = 'Supprimer';
+            btnSupprimer.className = 'supprimerBtn';
+            btnSupprimer.onclick = () => {
+                itemsSauvegardes = itemsSauvegardes.filter(i => i !== item);
+                localStorage.setItem('itemsSauvegardes', JSON.stringify(itemsSauvegardes));
+                card.remove();
+            };
+            card.appendChild(btnSupprimer);
         }
-    } catch(e) {
-        console.error(e);
-        alert("Erreur lors de la récupération du profil, réessayez sur CodePen ou Glitch.");
+
+        document.getElementById('marketplace').appendChild(card);
     }
-}
 
-function confirmUser(isConfirmed) {
-    if (isConfirmed) {
-        document.getElementById('passInput').style.display = 'block';
-    } else {
-        alert("Veuillez réessayer avec le bon utilisateur.");
+    function chargerMarketplace(){
+        document.getElementById('marketplace').innerHTML = '';
+        itemsSauvegardes.forEach(afficherItem);
     }
-}
 
-function addToMarketplace() {
-    const passId = document.getElementById('gamepass').value.trim();
-    if (!passId) return alert("Entre l'ID de ton Game Pass!");
+    function ajouterItem(item){
+        itemsSauvegardes.push(item);
+        localStorage.setItem('itemsSauvegardes', JSON.stringify(itemsSauvegardes));
+        afficherItem(item);
+    }
 
-    const marketplace = document.getElementById('marketplace');
-    const item = document.createElement('div');
-    item.className = 'market-item';
-    item.innerHTML = `
-        <div style="display:flex; align-items:center;">
-            <img src="https://www.roblox.com/headshot-thumbnail/image?userId=${currentUser.id}&width=420&height=420&format=png">
-            <p>${currentUser.name}<br>Game Pass ID: ${passId}</p>
-        </div>
-        <button onclick="alert('Merci pour ton soutien à ${currentUser.name}!')">Acheter</button>
-    `;
-    marketplace.appendChild(item);
+    // Charger la marketplace au démarrage
+    chargerMarketplace();
 
-    // Reset
-    document.getElementById('username').value = '';
-    document.getElementById('gamepass').value = '';
-    document.getElementById('profile').style.display = 'none';
-    document.getElementById('passInput').style.display = 'none';
-}
+    // VENDRE
+    const popupForm = document.getElementById('popupForm');
+    document.getElementById('vendeButton').onclick = () => { popupForm.style.display='block'; }
+
+    const enregistrerBete = document.getElementById('enregistrerBete');
+    enregistrerBete.addEventListener('click', () => {
+        const nom = document.getElementById('nomBete').value.trim();
+        const description = document.getElementById('descriptionBete').value.trim();
+        const mutation = document.getElementById('mutationBete').value;
+        const utilisateur = document.getElementById('utilisateurRoblox').value.trim();
+        const prix = document.getElementById('prixRobux').value.trim();
+        const imageInput = document.getElementById('imageBete');
+
+        if(!nom || !description || !mutation || !utilisateur || !prix){
+            alert('Remplis tous les champs !');
+            return;
+        }
+        if(!imageInput.files || !imageInput.files[0]){
+            alert('Choisis une image !');
+            return;
+        }
+
+        const imageURL = URL.createObjectURL(imageInput.files[0]);
+
+        const nouvelItem = { nom, description, mutation, utilisateur, prix: parseInt(prix), imageURL };
+        ajouterItem(nouvelItem);
+
+        document.getElementById('nomBete').value = '';
+        document.getElementById('descriptionBete').value = '';
+        document.getElementById('utilisateurRoblox').value = '';
+        document.getElementById('prixRobux').value = '';
+        document.getElementById('imageBete').value = '';
+        popupForm.style.display = 'none';
+    });
+
+    window.acheterBete = function(nom, vendeur, prix){
+        if(!window.notificationsAutorisees){ alert("Activez les notifications avant d'acheter !"); return; }
+        const code = prompt(`Entrez le code Roblox pour acheter ${nom} de ${vendeur} pour ${prix} Robux :`);
+        if(code){ alert(`Achat simulé ! Vérifiez le code Roblox avant la transaction.`); }
+    }
+
+});
 </script>
-
 </body>
 </html>
+
+
