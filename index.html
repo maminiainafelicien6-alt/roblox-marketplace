@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roblox Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: #fff;
+        min-height: 100vh;
+    }
+    h1 {
+        margin-top: 20px;
+        font-size: 2em;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    .buttons {
+        margin: 20px 0;
+        display: flex;
+        gap: 20px;
+    }
+    button {
+        padding: 15px 30px;
+        font-size: 16px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        background: #00d4ff;
+        color: #000;
+        font-weight: bold;
+        transition: transform 0.2s, background 0.3s;
+    }
+    button:hover {
+        transform: scale(1.05);
+        background: #00f0ff;
+    }
+    .container {
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(10px);
+        padding: 25px;
+        border-radius: 25px;
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        margin-bottom: 20px;
+    }
+    input {
+        padding: 12px;
+        margin: 10px 0;
+        width: 80%;
+        border-radius: 12px;
+        border: none;
+        font-size: 16px;
+    }
+    img {
+        border-radius: 50%;
+        margin-top: 10px;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border: 3px solid #fff;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    .marketplace {
+        margin-top: 30px;
+        width: 90%;
+        max-width: 600px;
+    }
+    .market-item {
+        background: rgba(255,255,255,0.2);
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .market-item img {
+        width: 60px;
+        height: 60px;
+        margin-right: 15px;
+    }
+    .market-item p {
+        margin: 0;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<h1>Roblox Marketplace</h1>
+
+<div class="buttons">
+    <button onclick="showSell()">Vendre</button>
+    <button onclick="showDonate()">Donner</button>
+</div>
+
+<div class="container" id="sellContainer" style="display:none;">
+    <h2>Vendre ton Game Pass</h2>
+    <input type="text" id="username" placeholder="Nom d'utilisateur Roblox">
+    <button onclick="fetchProfile()">Suivant</button>
+    <div id="profile" style="display:none;">
+        <p id="displayName"></p>
+        <img id="avatar" src="" alt="Avatar Roblox">
+        <div style="margin-top:10px;">
+            <button onclick="confirmUser(true)">C'est moi ✅</button>
+            <button onclick="confirmUser(false)">Ce n'est pas moi ❌</button>
+        </div>
+    </div>
+    <div id="passInput" style="display:none;">
+        <input type="text" id="gamepass" placeholder="ID de ton Game Pass">
+        <button onclick="addToMarketplace()">Ajouter au Marketplace</button>
+    </div>
+</div>
+
+<div class="container" id="donateContainer" style="display:none;">
+    <h2>Marketplace</h2>
+    <div class="marketplace" id="marketplace"></div>
+</div>
+
+<script>
+let currentUser = {};
+
+function showSell() {
+    document.getElementById('sellContainer').style.display = 'block';
+    document.getElementById('donateContainer').style.display = 'none';
+}
+
+function showDonate() {
+    document.getElementById('sellContainer').style.display = 'none';
+    document.getElementById('donateContainer').style.display = 'block';
+}
+
+async function fetchProfile() {
+    const username = document.getElementById('username').value.trim();
+    if (!username) return alert("Entre un nom d'utilisateur Roblox!");
+
+    try {
+        const res = await fetch(`https://users.roblox.com/v1/users/by-username?username=${encodeURIComponent(username)}`);
+        const data = await res.json();
+        if(data.id) {
+            currentUser.id = data.id;
+            currentUser.name = data.name;
+            document.getElementById('displayName').innerText = `${data.name} (ID: ${data.id})`;
+            document.getElementById('avatar').src = `https://www.roblox.com/headshot-thumbnail/image?userId=${data.id}&width=420&height=420&format=png`;
+            document.getElementById('profile').style.display = 'block';
+        } else {
+            alert("Utilisateur introuvable!");
+        }
+    } catch(e) {
+        console.error(e);
+        alert("Erreur lors de la récupération du profil, réessayez sur CodePen ou Glitch.");
+    }
+}
+
+function confirmUser(isConfirmed) {
+    if (isConfirmed) {
+        document.getElementById('passInput').style.display = 'block';
+    } else {
+        alert("Veuillez réessayer avec le bon utilisateur.");
+    }
+}
+
+function addToMarketplace() {
+    const passId = document.getElementById('gamepass').value.trim();
+    if (!passId) return alert("Entre l'ID de ton Game Pass!");
+
+    const marketplace = document.getElementById('marketplace');
+    const item = document.createElement('div');
+    item.className = 'market-item';
+    item.innerHTML = `
+        <div style="display:flex; align-items:center;">
+            <img src="https://www.roblox.com/headshot-thumbnail/image?userId=${currentUser.id}&width=420&height=420&format=png">
+            <p>${currentUser.name}<br>Game Pass ID: ${passId}</p>
+        </div>
+        <button onclick="alert('Merci pour ton soutien à ${currentUser.name}!')">Acheter</button>
+    `;
+    marketplace.appendChild(item);
+
+    // Reset
+    document.getElementById('username').value = '';
+    document.getElementById('gamepass').value = '';
+    document.getElementById('profile').style.display = 'none';
+    document.getElementById('passInput').style.display = 'none';
+}
+</script>
+
+</body>
+</html>
